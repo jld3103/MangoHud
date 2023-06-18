@@ -649,6 +649,7 @@ void render_imgui(swapchain_stats& data, struct overlay_params& params, ImVec2& 
    } else {
       window_size = ImVec2(params.width, params.height);
    }
+   unsigned width = io.DisplaySize.x;
    unsigned height = io.DisplaySize.y;
    auto now = Clock::now();
 
@@ -693,6 +694,22 @@ void render_imgui(swapchain_stats& data, struct overlay_params& params, ImVec2& 
       ImGui::End();
       if((now - logger->last_log_end()) < 12s && !logger->is_active())
          render_benchmark(data, params, window_size, height, now);
+
+      if (params.enabled[OVERLAY_PARAM_ENABLED_crosshair]){
+         ImGui::SetNextWindowBgAlpha(0.0);
+         ImGui::SetNextWindowSize(ImVec2(width, height), ImGuiCond_Always);
+         ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
+         ImGui::Begin("Crosshair", &gui_open, ImGuiWindowFlags_NoDecoration);
+         ImVec2 horiz = ImVec2(width / 2 - (params.crosshair_size / 2), height / 2);
+         ImVec2 vert = ImVec2(width / 2, height / 2 - (params.crosshair_size / 2));
+         ImGui::GetWindowDrawList()->AddLine(horiz,
+            ImVec2(horiz.x + params.crosshair_size, horiz.y + 0),
+            params.crosshair_color, params.crosshair_thickness);
+         ImGui::GetWindowDrawList()->AddLine(vert,
+            ImVec2(vert.x + 0, vert.y + params.crosshair_size),
+            params.crosshair_color, params.crosshair_thickness);
+         ImGui::End();
+      }
    }
 
    if(params.enabled[OVERLAY_PARAM_ENABLED_fcat])

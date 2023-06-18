@@ -102,6 +102,7 @@ typedef unsigned long KeySym;
    OVERLAY_PARAM_BOOL(text_outline)                  \
    OVERLAY_PARAM_BOOL(temp_fahrenheit)               \
    OVERLAY_PARAM_BOOL(dynamic_frame_timing)          \
+   OVERLAY_PARAM_BOOL(crosshair)                     \
    OVERLAY_PARAM_CUSTOM(fps_sampling_period)         \
    OVERLAY_PARAM_CUSTOM(output_folder)               \
    OVERLAY_PARAM_CUSTOM(output_file)                 \
@@ -180,6 +181,9 @@ typedef unsigned long KeySym;
    OVERLAY_PARAM_CUSTOM(preset)                      \
    OVERLAY_PARAM_CUSTOM(text_outline_color)          \
    OVERLAY_PARAM_CUSTOM(text_outline_thickness)      \
+   OVERLAY_PARAM_CUSTOM(crosshair_size)              \
+   OVERLAY_PARAM_CUSTOM(crosshair_thickness)         \
+   OVERLAY_PARAM_CUSTOM(crosshair_color)             \
 
 enum overlay_param_position {
    LAYER_POSITION_TOP_LEFT,
@@ -252,7 +256,7 @@ struct overlay_params {
    enum gl_size_query gl_size_query {GL_SIZE_DRAWABLE};
    bool gl_dont_flip {false};
    int64_t log_duration, log_interval;
-   unsigned cpu_color, gpu_color, vram_color, ram_color, engine_color, io_color, frametime_color, background_color, text_color, wine_color, battery_color;
+   unsigned cpu_color, gpu_color, vram_color, ram_color, engine_color, io_color, frametime_color, background_color, text_color, wine_color, battery_color, crosshair_color;
    std::vector<unsigned> gpu_load_color;
    std::vector<unsigned> cpu_load_color;
    std::vector<unsigned> gpu_load_value;
@@ -298,6 +302,7 @@ struct overlay_params {
    size_t font_params_hash;
    unsigned text_outline_color;
    float text_outline_thickness;
+   uint32_t crosshair_size, crosshair_thickness;
 };
 
 const extern char *overlay_param_names[];

@@ -207,6 +207,18 @@ parse_no_display(const char *str)
    return strtol(str, NULL, 0) != 0;
 }
 
+static uint32_t
+parse_crosshair_size(const char *str)
+{
+   return strtol(str, NULL, 0);
+}
+
+static uint32_t
+parse_crosshair_thickness(const char *str)
+{
+   return strtol(str, NULL, 0);
+}
+
 static unsigned
 parse_color(const char *str)
 {
@@ -426,6 +438,7 @@ parse_gl_size_query(const char *str)
 #define parse_af(s) parse_signed(s)
 #define parse_preset(s) parse_signed(s)
 
+#define parse_crosshair_color(s) parse_color(s)
 #define parse_cpu_color(s) parse_color(s)
 #define parse_gpu_color(s) parse_color(s)
 #define parse_vram_color(s) parse_color(s)
@@ -565,6 +578,7 @@ parse_overlay_env(struct overlay_params *params,
          params->enabled[OVERLAY_PARAM_ENABLED_engine_short_names] = 0;
          params->enabled[OVERLAY_PARAM_ENABLED_dynamic_frame_timing] = 0;
          params->enabled[OVERLAY_PARAM_ENABLED_temp_fahrenheit] = 0;
+         params->enabled[OVERLAY_PARAM_ENABLED_crosshair] = 0;
       }
 #define OVERLAY_PARAM_BOOL(name)                                       \
       if (!strcmp(#name, key)) {                                       \
@@ -669,6 +683,8 @@ static void set_param_defaults(struct overlay_params *params){
    params->table_columns = 3;
    params->text_outline_color = 0x000000;
    params->text_outline_thickness = 1.5;
+   params->crosshair_size = 30;
+   params->crosshair_thickness = 2;
 }
 
 void
@@ -746,6 +762,7 @@ parse_overlay_config(struct overlay_params *params,
          params->enabled[OVERLAY_PARAM_ENABLED_engine_short_names] = 0;
          params->enabled[OVERLAY_PARAM_ENABLED_dynamic_frame_timing] = 0;
          params->enabled[OVERLAY_PARAM_ENABLED_temp_fahrenheit] = 0;
+         params->enabled[OVERLAY_PARAM_ENABLED_crosshair] = 0;
          params->options.erase("full");
       }
       for (auto& it : params->options) {
@@ -787,7 +804,7 @@ parse_overlay_config(struct overlay_params *params,
       params->font_scale_media_player = 0.55f;
 
    // Convert from 0xRRGGBB to ImGui's format
-   std::array<unsigned *, 21> colors = {
+   std::array<unsigned *, 22> colors = {
       &params->cpu_color,
       &params->gpu_color,
       &params->vram_color,
@@ -809,6 +826,7 @@ parse_overlay_config(struct overlay_params *params,
       &params->fps_color[0],
       &params->fps_color[1],
       &params->fps_color[2],
+      &params->crosshair_color,
    };
 
    for (auto color : colors){
